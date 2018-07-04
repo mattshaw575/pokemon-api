@@ -7,7 +7,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -61,7 +63,18 @@ func listCompleteDex() {
 }
 
 func findPokemonByName() {
-	response, err := http.Get("http://pokeapi.co/api/v2/pokemon/mewtwo")
+	r := bufio.NewReader(os.Stdin)
+	fmt.Print("Pokemon Name: ")
+	pokemonName, _ := r.ReadString('\n')
+
+	u, err := url.Parse("http://pokeapi.co/api/v2/pokemon/")
+	u.Path = path.Join(u.Path, pokemonName)
+	URL := u.String()
+	newURL := strings.ToLower(strings.TrimSuffix(URL, "%0A"))
+	// println(newURL)
+
+	response, err := http.Get(newURL)
+
 	if err != nil {
 		fmt.Print(err.Error())
 		os.Exit(1)
@@ -75,16 +88,35 @@ func findPokemonByName() {
 	var responseObject Response
 	json.Unmarshal(responseData, &responseObject)
 
-	fmt.Println("==================")
+	fmt.Println("\n==================")
 	fmt.Println("Pokedex Entry: ", responseObject.DexNo)
 	fmt.Println("Pokemon Name: ", strings.Title(responseObject.Name))
 	fmt.Println("==================")
 	fmt.Println("")
-
 }
 
 func findPokemonByNumber() {
-	response, err := http.Get("http://pokeapi.co/api/v2/pokemon/1")
+	r := bufio.NewReader(os.Stdin)
+	fmt.Print("Pokedex Entry: ")
+	pokemonNo, _ := r.ReadString('\n')
+
+	var i int
+	if (i >= 0) && (i <= 807) {
+		fmt.Println("Searching for Pokemon...")
+	} else {
+		fmt.Println("Oak's words echoed... The National Pokedex only goes so far...")
+		fmt.Println("Generations 1-7 have a range from #1 to #807")
+		return
+	}
+
+	u, err := url.Parse("http://pokeapi.co/api/v2/pokemon/")
+	u.Path = path.Join(u.Path, pokemonNo)
+	URL := u.String()
+	newURL := strings.TrimSuffix(URL, "%0A")
+	// println(newURL)
+
+	response, err := http.Get(newURL)
+
 	if err != nil {
 		fmt.Print(err.Error())
 		os.Exit(1)
@@ -98,7 +130,7 @@ func findPokemonByNumber() {
 	var responseObject Response
 	json.Unmarshal(responseData, &responseObject)
 
-	fmt.Println("==================")
+	fmt.Println("\n==================")
 	fmt.Println("Pokedex Entry: ", responseObject.DexNo)
 	fmt.Println("Pokemon Name: ", strings.Title(responseObject.Name))
 	fmt.Println("==================")
@@ -108,28 +140,25 @@ func findPokemonByNumber() {
 func main() {
 	var option string
 
-	fmt.Print("\n==================")
-	fmt.Print("\nMatt's Golang Pokedex")
-	fmt.Print("\n==================\n")
-	fmt.Print("\nSelect from the followng options:")
-	fmt.Print("\n1. List complete Kanto Pokedex")
-	fmt.Print("\n2. Find Pokemon stats by Name")
-	fmt.Print("\n3. Find Pokemon stats by Number\n\n")
+	fmt.Println("==================")
+	fmt.Println("Matt's Golang Pokedex")
+	fmt.Println("==================\n")
+	fmt.Println("Select from the followng options:")
+	fmt.Println("1. List complete Kanto Pokedex")
+	fmt.Println("2. Find Pokemon stats by Name")
+	fmt.Println("3. Find Pokemon stats by Number\n")
 
 	fmt.Scan(&option)
 
 	if option == "1" {
 		listCompleteDex()
+
 	} else if option == "2" {
-		r := bufio.NewReader(os.Stdin)
-		fmt.Print("Pokemon Name: ")
-		r.ReadString('\n')
 		findPokemonByName()
+
 	} else if option == "3" {
-		r := bufio.NewReader(os.Stdin)
-		fmt.Print("Pokedex Entry: ")
-		r.ReadString('\n')
 		findPokemonByNumber()
+
 	} else {
 		fmt.Println("Not a valid entry, try again")
 	}

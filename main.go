@@ -176,6 +176,7 @@ func additionalSearches() {
 }
 
 func moveStrengthsAndWeaknesses() {
+	//https://www.google.co.uk/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjYudjb75LcAhWLuRQKHXlAAHgQjRx6BAgBEAU&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DnyTpVVzsUDA&psig=AOvVaw2rUROT2g4Wb1Mxh3Gvkucm&ust=1531254617604856
 }
 
 func main() {

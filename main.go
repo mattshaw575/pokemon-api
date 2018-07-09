@@ -32,8 +32,28 @@ type PokemonSpecies struct {
 	URL  string `json:"url"`
 }
 
-func listCompleteDex() {
-	response, err := http.Get("http://pokeapi.co/api/v2/pokedex/kanto/")
+func listCompleteDexByRegion() {
+	r := bufio.NewReader(os.Stdin)
+	fmt.Println("\nWhich region do you want the pokemon listings from?")
+	fmt.Println("1. National (across all generations)")
+	fmt.Println("2. Kanto (gen 1)")
+	fmt.Println("3. Johto (gen 2)")
+	fmt.Println("4. Hoenn (gen 3)")
+	fmt.Println("5. Sinnoh (gen 4)") // 5+6
+	fmt.Println("6. Unova (gen 5)")  // 8+9
+	fmt.Println("7. Kalos (gen 6)")  //12+13+14
+	fmt.Println()
+
+	pokedexRegion, _ := r.ReadString('\n')
+
+	u, err := url.Parse("http://pokeapi.co/api/v2/pokedex/")
+	u.Path = path.Join(u.Path, pokedexRegion)
+	URL := u.String()
+	newURL := strings.ToLower(strings.TrimSuffix(URL, "%0A"))
+
+	response, err := http.Get(newURL)
+
+	// response, err := http.Get("http://pokeapi.co/api/v2//kanto/")
 	if err != nil {
 		fmt.Print(err.Error())
 		os.Exit(1)
@@ -56,7 +76,7 @@ func listCompleteDex() {
 		fmt.Println("Pokédex Entry: ", responseObject.Pokemon[i].EntryNo)
 		fmt.Println("Pokémon Name: ", strings.Title(responseObject.Pokemon[i].Species.Name))
 		fmt.Println("URL Reference: ", responseObject.Pokemon[i].Species.URL)
-		fmt.Println("")
+		fmt.Println()
 	}
 
 	fmt.Println("==================")
@@ -71,7 +91,6 @@ func findPokemonByName() {
 	u.Path = path.Join(u.Path, pokemonName)
 	URL := u.String()
 	newURL := strings.ToLower(strings.TrimSuffix(URL, "%0A"))
-	// println(newURL)
 
 	response, err := http.Get(newURL)
 
@@ -92,7 +111,7 @@ func findPokemonByName() {
 	fmt.Println("Pokedex Entry: ", responseObject.DexNo)
 	fmt.Println("Pokemon Name: ", strings.Title(responseObject.Name))
 	fmt.Println("==================")
-	fmt.Println("")
+	fmt.Println()
 }
 
 func findPokemonByNumber() {
@@ -105,7 +124,7 @@ func findPokemonByNumber() {
 		fmt.Println("Searching for Pokemon...")
 	} else {
 		fmt.Println("Oak's words echoed... The National Pokedex only goes so far...")
-		fmt.Println("Generations 1-7 have a range from #1 to #807")
+		fmt.Println("Generations 1-7 have a range from #1 to #721")
 		return
 	}
 
@@ -113,7 +132,6 @@ func findPokemonByNumber() {
 	u.Path = path.Join(u.Path, pokemonNo)
 	URL := u.String()
 	newURL := strings.TrimSuffix(URL, "%0A")
-	// println(newURL)
 
 	response, err := http.Get(newURL)
 
@@ -134,30 +152,68 @@ func findPokemonByNumber() {
 	fmt.Println("Pokedex Entry: ", responseObject.DexNo)
 	fmt.Println("Pokemon Name: ", strings.Title(responseObject.Name))
 	fmt.Println("==================")
-	fmt.Println("")
+	fmt.Println()
+}
+
+func additionalSearches() {
+	var retry string
+
+	fmt.Println("==================")
+	fmt.Println("Continue Operations? ")
+
+	fmt.Scan(&retry)
+
+	// if retry == ("Yes") {
+	// 	listCompleteDexByRegion()
+
+	// } else {
+	// 	fmt.Println("Exiting operations")
+	// }
+
+	switch {
+	case retry == "Yes":
+		main()
+
+	case retry == "yes":
+		main()
+
+	case retry == "Y":
+		main()
+
+	case retry == "y":
+		main()
+
+	default:
+		fmt.Println("Exiting operations")
+	}
 }
 
 func main() {
 	var option string
 
+	print("\033[H\033[2J") // Clear the terminal when running
 	fmt.Println("==================")
 	fmt.Println("Matt's Golang Pokedex")
-	fmt.Println("==================\n")
-	fmt.Println("Select from the followng options:")
+	fmt.Println("==================")
+	fmt.Println("\nSelect from the followng options:")
 	fmt.Println("1. List complete Kanto Pokedex")
 	fmt.Println("2. Find Pokemon stats by Name")
-	fmt.Println("3. Find Pokemon stats by Number\n")
+	fmt.Println("3. Find Pokemon stats by Number")
+	fmt.Println()
 
 	fmt.Scan(&option)
 
 	if option == "1" {
-		listCompleteDex()
+		listCompleteDexByRegion()
+		additionalSearches()
 
 	} else if option == "2" {
 		findPokemonByName()
+		additionalSearches()
 
 	} else if option == "3" {
 		findPokemonByNumber()
+		additionalSearches()
 
 	} else {
 		fmt.Println("Not a valid entry, try again")

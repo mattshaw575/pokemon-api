@@ -19,7 +19,7 @@ type Response struct {
 	Name        string    `json:"name"`
 	Pokemon     []Pokemon `json:"pokemon_entries"`
 	DexNo       int       `json:"id"`
-	PokemonType Type      `json:"types"`
+	PokemonType []Type    `json:"types"`
 }
 
 // A Pokemon Struct to map every pokemon to.
@@ -30,7 +30,7 @@ type Pokemon struct {
 
 // A Type will list (up to) both types a given Pokemon can have
 type Type struct {
-	TypeSlots int         `json="slot"`
+	TypeSlots int         `json:"slot"`
 	Type      PokemonType `json:"type"`
 }
 
@@ -141,7 +141,10 @@ func findPokemonByNameOrNumber() {
 	fmt.Println("\n==================")
 	fmt.Println("Pokedex Entry: ", responseObject.DexNo)
 	fmt.Println("Pokemon Name: ", strings.Title(responseObject.Name))
-	// fmt.Println("Pokemon Type 1: ", responseObject.PokemonType.TypeSlots)
+
+	for i := 0; i < len(responseObject.PokemonType); i++ {
+		fmt.Println("Pokemon Type: ", responseObject.PokemonType[i].Type.Name)
+	}
 
 	// if responseObject.PokemonType.TypeSlots = 2 {
 	// 	fmt.Println("Pokemon Type 2: ", responseObject.PokemonType.TypeSlots)

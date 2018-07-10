@@ -109,15 +109,6 @@ func findPokemonByNameOrNumber() {
 	fmt.Print("Pokemon Name or Number: ")
 	pokemonNameOrNumber, _ := r.ReadString('\n')
 
-	// var i int
-	// if (i >= 0) && (i <= 721) {
-	// 	fmt.Println("Searching for Pokemon...")
-	// } else {
-	// 	fmt.Println("Oak's words echoed... The National Pokedex only goes so far...")
-	// 	fmt.Println("Generations 1-7 have a range from #1 to #721")
-	// 	return
-	// }
-
 	u, err := url.Parse("http://pokeapi.co/api/v2/pokemon/")
 	u.Path = path.Join(u.Path, pokemonNameOrNumber)
 	URL := u.String()
@@ -138,18 +129,20 @@ func findPokemonByNameOrNumber() {
 	var responseObject Response
 	json.Unmarshal(responseData, &responseObject)
 
+	if responseObject.DexNo == 0 {
+		fmt.Println("\nOak's words echoed... The National Pokedex only goes so far...")
+		fmt.Println("Generations 1-7 have a range from #1 to #721")
+		time.Sleep(5000 * time.Millisecond)
+		main()
+	}
+
 	fmt.Println("\n==================")
 	fmt.Println("Pokedex Entry: ", responseObject.DexNo)
 	fmt.Println("Pokemon Name: ", strings.Title(responseObject.Name))
 
 	for i := 0; i < len(responseObject.PokemonType); i++ {
-		fmt.Println("Pokemon Type: ", responseObject.PokemonType[i].Type.Name)
+		fmt.Println("Pokemon Type: ", strings.Title(responseObject.PokemonType[i].Type.Name))
 	}
-
-	// if responseObject.PokemonType.TypeSlots = 2 {
-	// 	fmt.Println("Pokemon Type 2: ", responseObject.PokemonType.TypeSlots)
-	// return
-	// }
 
 	fmt.Println("==================")
 	fmt.Println()

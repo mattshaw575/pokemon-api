@@ -65,6 +65,7 @@ func listCompleteDexByRegion() {
 	URL := u.String()
 	dexURL := strings.ToLower(strings.TrimSuffix(URL, "%0A"))
 
+	//TODO - make this more intelligent
 	switch {
 	case dexURL == "http://pokeapi.co/api/v2/pokedex/6":
 		dexURL = "http://pokeapi.co/api/v2/pokedex/8"
@@ -171,9 +172,17 @@ func additionalSearches() {
 	}
 }
 
+/*
+// TODO - doesn't exist in PokeAPI, so I will need to manually create
 func moveStrengthsAndWeaknesses() {
 	//https://www.google.co.uk/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjYudjb75LcAhWLuRQKHXlAAHgQjRx6BAgBEAU&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DnyTpVVzsUDA&psig=AOvVaw2rUROT2g4Wb1Mxh3Gvkucm&ust=1531254617604856
 }
+
+// TODO - API looks ugly for this, but the structs look deep
+func pokemonEvoChain() {
+https://pokeapi.co/api/v2/evolution-chain/2/
+}
+*/
 
 func main() {
 	var option int

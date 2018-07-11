@@ -57,24 +57,30 @@ func listCompleteDexByRegion() {
 	fmt.Println("5. Sinnoh (gen 4)")
 	fmt.Println("6. Unova (gen 5)")
 	fmt.Println("7. Kalos (gen 6)")
+	fmt.Println("8. Return")
 	fmt.Println()
 
 	pokedexRegion, _ := r.ReadString('\n')
 	u, err := url.Parse("http://pokeapi.co/api/v2/pokedex/")
+
+	switch {
+	case pokedexRegion == "6\n":
+		pokedexRegion = "8"
+
+	case pokedexRegion == "7\n":
+		pokedexRegion = "12"
+
+	case pokedexRegion == "8\n":
+		fmt.Println("\nJumping back to main function...")
+		time.Sleep(2000 * time.Millisecond)
+		main()
+	}
+
 	u.Path = path.Join(u.Path, pokedexRegion)
 	URL := u.String()
 	dexURL := strings.ToLower(strings.TrimSuffix(URL, "%0A"))
 
-	//TODO - make this more intelligent
-	switch {
-	case dexURL == "http://pokeapi.co/api/v2/pokedex/6":
-		dexURL = "http://pokeapi.co/api/v2/pokedex/8"
-
-	case dexURL == "http://pokeapi.co/api/v2/pokedex/7":
-		dexURL = "http://pokeapi.co/api/v2/pokedex/12"
-	}
-
-	fmt.Println("Processing request...")
+	fmt.Println("\nProcessing request...")
 	time.Sleep(2000 * time.Millisecond)
 	response, err := http.Get(dexURL)
 
@@ -91,18 +97,20 @@ func listCompleteDexByRegion() {
 	var responseObject Response
 	json.Unmarshal(responseData, &responseObject)
 
-	fmt.Println("==================")
+	fmt.Println("======================")
 	fmt.Println("Region:", strings.Title(responseObject.Name))
-	fmt.Println("==================")
+	fmt.Println("=====================")
 
 	for i := 0; i < len(responseObject.Pokemon); i++ {
 
-		fmt.Println("Pokédex Entry: ", responseObject.Pokemon[i].EntryNo)
+		fmt.Println("\nPokédex Entry: ", responseObject.Pokemon[i].EntryNo)
 		fmt.Println("Pokémon Name: ", strings.Title(responseObject.Pokemon[i].Species.Name))
+		// fmt.Println("Pokemon Type: ", strings.Title(responseObject.PokemonType[i].Type.Name))
 		fmt.Println("URL Reference: ", responseObject.Pokemon[i].Species.URL)
 		fmt.Println()
 	}
-	fmt.Println("==================")
+	fmt.Println("=====================")
+	fmt.Println()
 }
 
 func findPokemonByNameOrNumber() {
@@ -137,7 +145,7 @@ func findPokemonByNameOrNumber() {
 		main()
 	}
 
-	fmt.Println("\n==================")
+	fmt.Println("\n=====================")
 	fmt.Println("Pokedex Entry: ", responseObject.DexNo)
 	fmt.Println("Pokemon Name: ", strings.Title(responseObject.Name))
 
@@ -145,7 +153,7 @@ func findPokemonByNameOrNumber() {
 		fmt.Println("Pokemon Type: ", strings.Title(responseObject.PokemonType[i].Type.Name))
 	}
 
-	fmt.Println("==================")
+	fmt.Println("=====================")
 	fmt.Println()
 }
 
@@ -162,37 +170,25 @@ func additionalSearches() {
 		main()
 
 	case strings.HasPrefix(retry, "Y"):
-		time.Sleep(2000 * time.Millisecond)
 		fmt.Println("\nJumping back to main function...")
+		time.Sleep(2000 * time.Millisecond)
 		main()
 
 	default:
-		fmt.Println("Exiting operations")
+		fmt.Println("\nExiting operations")
 		time.Sleep(1000 * time.Millisecond)
 	}
 }
-
-/*
-// TODO - doesn't exist in PokeAPI, so I will need to manually create
-func moveStrengthsAndWeaknesses() {
-	//https://www.google.co.uk/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjYudjb75LcAhWLuRQKHXlAAHgQjRx6BAgBEAU&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DnyTpVVzsUDA&psig=AOvVaw2rUROT2g4Wb1Mxh3Gvkucm&ust=1531254617604856
-}
-
-// TODO - API looks ugly for this, but the structs look deep
-func pokemonEvoChain() {
-https://pokeapi.co/api/v2/evolution-chain/2/
-}
-*/
 
 func main() {
 	var option int
 
 	print("\033[H\033[2J") // Clear the terminal when running
-	fmt.Println("==================")
+	fmt.Println("=====================")
 	fmt.Println("Matt's Golang Pokedex")
-	fmt.Println("==================")
+	fmt.Println("=====================")
 	fmt.Println("\nSelect from the followng options:")
-	fmt.Println("1. List complete Kanto Pokedex")
+	fmt.Println("1. List all Pokemon by selected Pokedex")
 	fmt.Println("2. Find Pokemon stats by Name or Number")
 	fmt.Println()
 

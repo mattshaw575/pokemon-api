@@ -64,13 +64,13 @@ func listCompleteDexByRegion() {
 	u, err := url.Parse("http://pokeapi.co/api/v2/pokedex/")
 
 	switch {
-	case pokedexRegion == "6\n":
+	case strings.TrimSpace(pokedexRegion) == "6":
 		pokedexRegion = "8"
 
-	case pokedexRegion == "7\n":
+	case strings.TrimSpace(pokedexRegion) == "7":
 		pokedexRegion = "12"
 
-	case pokedexRegion == "8\n":
+	case strings.TrimSpace(pokedexRegion) == "8":
 		fmt.Println("\nJumping back to main function...")
 		time.Sleep(2000 * time.Millisecond)
 		main()

@@ -81,7 +81,6 @@ func listCompleteDexByRegion() {
 	dexURL := strings.ToLower(strings.TrimSuffix(URL, "%0A"))
 
 	fmt.Println("\nProcessing request...")
-	time.Sleep(2000 * time.Millisecond)
 	response, err := http.Get(dexURL)
 
 	if err != nil {
@@ -180,6 +179,7 @@ func additionalSearches() {
 	}
 }
 
+// Make this a loop rather than calling main at the end to reduce blowing the stack
 func main() {
 	var option int
 

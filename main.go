@@ -193,7 +193,6 @@ func main() {
 	fmt.Println("\nSelect from the followng options:")
 	fmt.Println("1. List all Pokemon by selected Pokedex")
 	fmt.Println("2. Find Pokemon stats by Name or Number")
-	fmt.Println("3. Find Pokemon Location for a given Generation")
 	fmt.Println()
 
 	fmt.Scan(&option)
@@ -204,10 +203,6 @@ func main() {
 		additionalSearches()
 
 	case option == 2:
-		findPokemonByNameOrNumber()
-		additionalSearches()
-
-	case option == 3:
 		findPokemonByNameOrNumber()
 		additionalSearches()
 
